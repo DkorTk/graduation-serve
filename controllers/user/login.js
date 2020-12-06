@@ -1,8 +1,8 @@
 const { query } = require("../../lib/db");
 module.exports = async ctx => {
-    const {username, password} = ctx.request.body;
-    const sql = `SELECT * FROM user WHERE username=? AND password=?`;
-    const [row] = await query(sql, [username, password]);
+    const {email, password} = ctx.request.body;
+    const sql = `SELECT * FROM user WHERE email=? AND password=?`;
+    const [row] = await query(sql, [email, password]);
     const userInfo = row;
     if (userInfo) {
       //登录成功

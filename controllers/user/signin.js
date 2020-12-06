@@ -2,14 +2,14 @@ const { query } = require("../../lib/db");
 const { uid } = require("uid")
 module.exports = async ctx => {
     const {
-        username,
+        email,
         password,
         nickname
     } = ctx.request.body;
     //插入注册数据
     let id = uid();
-    const sql = "insert into `user` (`id`,`username`, `password`, `nickname`) values (?,?, ?, ?)";
-    await query("insert into `user` (`id`,`username`, `password`, `nickname`) values (?, ?, ?, ?)", [id, username, password, nickname]);
+    // const sql = "insert into `user` (`id`,`username`, `password`, `nickname`) values (?,?, ?, ?)";
+    await query("insert into `user` (`id`,`email`, `password`, `nickname`) values (?, ?, ?, ?)", [id, email, password, nickname]);
     
     
     const [row] = await query(`SELECT * FROM user WHERE id=?`,id);
