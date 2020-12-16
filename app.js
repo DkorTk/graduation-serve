@@ -14,7 +14,7 @@ const signin = require("./controllers/user/signin")
 
 // admin
 const adminLogin = require("./controllers/admin/login")
-const createPet = require("./controllers/admin/createPet")
+const createPet = require("./controllers/admin/pet")
 const uploadImage = require("./controllers/admin/uploadImage")
 const catImage = require("./controllers/admin/catImage")  
 
