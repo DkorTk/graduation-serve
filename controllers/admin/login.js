@@ -42,6 +42,11 @@ module.exports = ctx => {
 
     });
   }).catch(error => {
-    reject(error)
+    //登录失败
+    ctx.body = {
+      state: 0,
+      code: 400,
+      msg: "登录失败"
+    };
   })
 }

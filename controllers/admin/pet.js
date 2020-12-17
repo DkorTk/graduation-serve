@@ -2,26 +2,24 @@ const {
     query
 } = require("../../lib/db");
 
-module.exports = async ctx => {
-    console.log('请求路径: ' + ctx.url);
-    switch (ctx.url) {
-        case '/createPet':
-            addPet(ctx)
-            break;
-        case '/getPetList':
-            getPetList(ctx).then(rest => {
-                console.log(rest, '测试数据')
-                ctx.body = {
-                    data: rest,
-                    state: 1,
-                    code: 200,
-                    msg: "获取宠物列表成功！"
-                }
-            })
-            break;
-        default:
-            break;
-    }
+module.exports = ctx => {
+    return new Promise((resolve, reject) => {
+
+        console.log('请求路径: ' + ctx.url);
+        switch (ctx.url) {
+            case '/createPet':
+                addPet(ctx).then(() => { resolve() })
+                break;
+            case '/getPetList':
+                getPetList(ctx).then(() => { resolve() })
+                break;
+            case '/delPet':
+                delPet(ctx).then(() => { resolve() })
+                break;
+            default:
+                break;
+        }
+    })
 }
 
 function addPet (ctx) {
@@ -69,42 +67,45 @@ function addPet (ctx) {
                     resolve()
                 });
         }
-    }).catch(error => {
-        reject(error)
     })
 }
 
 function getPetList (ctx) {
     return new Promise((resolve, reject) => {
         const { animal } = ctx.request.body;
-        // console.log(animal, 'ssss')
 
         if (animal == "cat") {
             // console.log("获取宠物猫列表");
             query(" SELECT c.name,c.species,c.sex,c.age,c.weight,c.vaccine,c.exParasite,c.sterilization,c.organization, c.state FROM cat c").then(rest => {
                 console.log(rest)
-
-
-                resolve('1111')
+                ctx.body = {
+                    data: rest,
+                    state: 1,
+                    code: 200,
+                    msg: "获取宠物猫列表成功！"
+                }
+                resolve()
             });
 
         } else if (animal == "dog") {
             // console.log("获取宠物狗列表");
             query(" SELECT d.name,d.species,d.sex,d.age,d.weight,d.vaccine,d.exParasite,d.sterilization,d.organization, d.state FROM dog d").then(rest => {
                 ctx.body = {
+                    data: rest,
                     state: 1,
                     code: 200,
-                    msg: "获取宠物列表成功！"
+                    msg: "获取宠物狗列表成功！"
                 }
                 resolve()
             });
         }
-        else {
+        else if (animal == '-1') {
             // console.log("获取全部列表");
             query(" SELECT c.name,c.species,c.sex,c.age,c.weight,c.vaccine,c.exParasite,c.sterilization,c.organization, c.state FROM cat c " +
                 " UNION ALL " +
                 " SELECT d.name,d.species,d.sex,d.age,d.weight,d.vaccine,d.exParasite,d.sterilization,d.organization, d.state FROM dog d").then(rest => {
                     ctx.body = {
+                        data: rest,
                         state: 1,
                         code: 200,
                         msg: "获取宠物列表成功！"
@@ -113,7 +114,11 @@ function getPetList (ctx) {
                 });
         }
     }).catch(error => {
-        reject(error)
+        ctx.body = {
+            state: 1,
+            code: 400,
+            msg: "获取宠物列表失败！"
+        }
     })
 }
 
