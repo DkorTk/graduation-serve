@@ -42,6 +42,10 @@ app.use(serve(__dirname + "./static"));
 // user
 router.post('/login', login);
 router.post('/signin', signin);
+router.post('/getUserList', signin)
+router.post('/setUser', signin)
+router.post('/delUser', signin)
+
 
 // admin
 router.post('/adminLogin', adminLogin);
