@@ -16,15 +16,15 @@ const signin = require("./controllers/user/signin")
 const adminLogin = require("./controllers/admin/login")
 const createPet = require("./controllers/admin/pet")
 const uploadImage = require("./controllers/admin/uploadImage")
-const catImage = require("./controllers/admin/catImage")  
+const catImage = require("./controllers/admin/catImage")
 
 const app = new Koa();
 const router = new KoaRouter();
 app.use(
-    KoaBody({
-      multipart: true
-    })
-  );
+  KoaBody({
+    multipart: true
+  })
+);
 // 静态资源
 app.use(serve(__dirname + "./static"));
 // app.use(KoaStaticCache('./image', {
@@ -46,6 +46,7 @@ router.post('/signin', signin);
 // admin
 router.post('/adminLogin', adminLogin);
 router.post('/createPet', createPet);
+router.post('/getPetList', createPet);
 
 //上传dog图
 router.post('/uploadImage', uploadImage);
