@@ -13,6 +13,9 @@ module.exports = ctx => {
             case '/getPetList':
                 getPetList(ctx).then(() => { resolve() })
                 break;
+            case '/setPet':
+                setPet(ctx).then(() => { resolve() })
+                break;
             case '/delPet':
                 delPet(ctx).then(() => { resolve() })
                 break;
@@ -76,7 +79,7 @@ function getPetList (ctx) {
 
         if (animal == "cat") {
             // console.log("获取宠物猫列表");
-            query(" SELECT c.name,c.species,c.sex,c.age,c.weight,c.vaccine,c.exParasite,c.sterilization,c.organization, c.state FROM cat c").then(rest => {
+            query(" SELECT 'cat' as animal,c.id,c.name,c.species,c.sex,c.age,c.weight,c.vaccine,c.exParasite,c.sterilization,c.organization, c.state FROM cat c").then(rest => {
                 console.log(rest)
                 ctx.body = {
                     data: rest,
@@ -89,7 +92,7 @@ function getPetList (ctx) {
 
         } else if (animal == "dog") {
             // console.log("获取宠物狗列表");
-            query(" SELECT d.name,d.species,d.sex,d.age,d.weight,d.vaccine,d.exParasite,d.sterilization,d.organization, d.state FROM dog d").then(rest => {
+            query(" SELECT 'dog' as animal,c.id,d.name,d.species,d.sex,d.age,d.weight,d.vaccine,d.exParasite,d.sterilization,d.organization, d.state FROM dog d").then(rest => {
                 ctx.body = {
                     data: rest,
                     state: 1,
@@ -123,9 +126,76 @@ function getPetList (ctx) {
 }
 
 function setPet (ctx) {
+    return new Promise((resolve, reject) => {
+        const { animal } = ctx.request.body;
+        const { name, species, sex, age, weight, vaccine, exParasite, sterilization, organization, state, id } = ctx.request.body;
 
+        if (animal == "cat") {
+            // console.log("更新宠物猫");
+            query(" UPDATE cat c SET c.name=?,c.species=?,c.sex=?,c.age=?,c.weight=?,c.vaccine=?,c.exParasite=?,c.sterilization=?,c.organization=?, c.state=? WHERE c.id=? ", [name, species, sex, age, weight, vaccine, exParasite, sterilization, organization, state, id]).then(rest => {
+                // console.log(rest)
+                ctx.body = {
+                    state: 1,
+                    code: 200,
+                    msg: "更新宠物猫信息成功！"
+                }
+                resolve()
+            });
+        }
+        else {
+            // console.log("更新宠物狗");
+            query(" UPDATE dog d SET d.name=?,d.species=?,d.sex=?,d.age=?,d.weight=?,d.vaccine=?,d.exParasite=?,d.sterilization=?,d.organization=?, d.state=? WHERE d.id=? ", [name, species, sex, age, weight, vaccine, exParasite, sterilization, organization, state, id]).then(rest => {
+                // console.log(rest)
+                ctx.body = {
+                    state: 1,
+                    code: 200,
+                    msg: "更新宠物狗信息成功！"
+                }
+                resolve()
+            });
+        }
+    }).catch(error => {
+        ctx.body = {
+            state: 1,
+            code: 400,
+            msg: "宠物信息更新失败！"
+        }
+    })
 }
 
 function delPet (ctx) {
+    return new Promise((resolve, reject) => {
+        const { animal, id } = ctx.request.body;
 
+        if (animal == "cat") {
+            // console.log("删除宠物猫");
+            query(" DELETE FROM cat WHERE id=? ", [id]).then(rest => {
+                // console.log(rest)
+                ctx.body = {
+                    state: 1,
+                    code: 200,
+                    msg: "删除宠物猫信息成功！"
+                }
+                resolve()
+            });
+        }
+        else {
+            // console.log("删除宠物狗");
+            query(" DELETE FROM cat WHERE id=? ", [id]).then(rest => {
+                // console.log(rest)
+                ctx.body = {
+                    state: 1,
+                    code: 200,
+                    msg: "删除宠物狗信息成功！"
+                }
+                resolve()
+            });
+        }
+    }).catch(error => {
+        ctx.body = {
+            state: 1,
+            code: 400,
+            msg: "宠物信息删除失败！"
+        }
+    })
 }

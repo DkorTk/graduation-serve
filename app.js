@@ -45,8 +45,11 @@ router.post('/signin', signin);
 
 // admin
 router.post('/adminLogin', adminLogin);
+// petManage
 router.post('/createPet', createPet);
 router.post('/getPetList', createPet);
+router.post('/setPet', createPet);
+router.post('/delPet', createPet);
 
 //上传dog图
 router.post('/uploadImage', uploadImage);
