@@ -75,11 +75,16 @@ function addPet (ctx) {
 
 function getPetList (ctx) {
     return new Promise((resolve, reject) => {
-        const { animal } = ctx.request.body;
+        const { animal, organ } = ctx.request.body;
 
         if (animal == "cat") {
             // console.log("获取宠物猫列表");
-            query(" SELECT 'cat' as animal,c.id,c.name,c.species,c.sex,c.age,c.weight,c.vaccine,c.exParasite,c.sterilization,c.organization, c.state FROM cat c").then(rest => {
+            let sql = " SELECT 'cat' as animal,c.id,c.name,c.species,c.sex,c.age,c.weight,c.vaccine,c.exParasite,c.sterilization,c.organization, c.state FROM cat c "
+            let param = [organ]
+            if (organ != '-1') {
+                sql += " WHERE c.organization=? "
+            }
+            query(sql, param).then(rest => {
                 console.log(rest)
                 ctx.body = {
                     data: rest,
@@ -92,7 +97,13 @@ function getPetList (ctx) {
 
         } else if (animal == "dog") {
             // console.log("获取宠物狗列表");
-            query(" SELECT 'dog' as animal,c.id,d.name,d.species,d.sex,d.age,d.weight,d.vaccine,d.exParasite,d.sterilization,d.organization, d.state FROM dog d").then(rest => {
+            let sql = " SELECT 'dog' as animal,d.id,d.name,d.species,d.sex,d.age,d.weight,d.vaccine,d.exParasite,d.sterilization,d.organization, d.state FROM dog d "
+            let param = [organ]
+            if (organ != '-1') {
+                sql += " WHERE d.organization=? "
+            }
+
+            query(sql, param).then(rest => {
                 ctx.body = {
                     data: rest,
                     state: 1,
@@ -104,17 +115,23 @@ function getPetList (ctx) {
         }
         else if (animal == '-1') {
             // console.log("获取全部列表");
-            query(" SELECT c.name,c.species,c.sex,c.age,c.weight,c.vaccine,c.exParasite,c.sterilization,c.organization, c.state FROM cat c " +
-                " UNION ALL " +
-                " SELECT d.name,d.species,d.sex,d.age,d.weight,d.vaccine,d.exParasite,d.sterilization,d.organization, d.state FROM dog d").then(rest => {
-                    ctx.body = {
-                        data: rest,
-                        state: 1,
-                        code: 200,
-                        msg: "获取宠物列表成功！"
-                    }
-                    resolve()
-                });
+            let sqlCat = " SELECT 'cat' as animal,c.id,c.name,c.species,c.sex,c.age,c.weight,c.vaccine,c.exParasite,c.sterilization,c.organization, c.state FROM cat c "
+            let sqlDog = " SELECT 'dog' as animal,d.id,d.name,d.species,d.sex,d.age,d.weight,d.vaccine,d.exParasite,d.sterilization,d.organization, d.state FROM dog d "
+            if (organ != '-1') {
+                sqlCat += ' WHERE c.organization=? '
+                sqlDog += ' WHERE d.organization=? '
+            }
+            let param = [organ]
+
+            query(sqlCat + " UNION ALL " + sqlDog, param).then(rest => {
+                ctx.body = {
+                    data: rest,
+                    state: 1,
+                    code: 200,
+                    msg: "获取宠物列表成功！"
+                }
+                resolve()
+            });
         }
     }).catch(error => {
         ctx.body = {
