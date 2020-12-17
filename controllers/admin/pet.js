@@ -185,7 +185,7 @@ function delPet (ctx) {
         const { animal, id } = ctx.request.body;
 
         if (animal == "cat") {
-            // console.log("删除宠物猫");
+            console.log("删除宠物猫");
             query(" DELETE FROM cat WHERE id=? ", [id]).then(rest => {
                 // console.log(rest)
                 ctx.body = {
@@ -197,8 +197,8 @@ function delPet (ctx) {
             });
         }
         else {
-            // console.log("删除宠物狗");
-            query(" DELETE FROM cat WHERE id=? ", [id]).then(rest => {
+            console.log("删除宠物狗", id);
+            query(" DELETE FROM dog WHERE id=? ", [id]).then(rest => {
                 // console.log(rest)
                 ctx.body = {
                     state: 1,
