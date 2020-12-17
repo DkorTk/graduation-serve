@@ -7,6 +7,10 @@ const KoaBody = require("koa-body");
 
 // 引入lib中的具体执行逻辑
 
+// organ
+const organ = require("./controllers/organ/organ")
+
+
 // user
 const login = require("./controllers/user/login");
 const signin = require("./controllers/user/signin")
@@ -38,6 +42,13 @@ app.use(serve(__dirname + "./static"));
 //     console.log(ctx.request.body);
 //     ctx.body = "哈喽，我是1号"
 // })
+
+// organ
+router.post('/addOrgan', organ);
+router.post('/getOrganList', organ);
+router.post('/setOrgan', organ);
+router.post('/delOrgan', organ);
+
 
 // user
 router.post('/login', login);
