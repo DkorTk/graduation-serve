@@ -22,8 +22,9 @@ module.exports = async ctx => {
 
 async function addOrgan (ctx) {
   const { name, account, password } = ctx.request.body;
-  let sql = " insert into organ (name`, `account`, `password`) values (?, ?, ?, ?) ";
+  let sql = " insert into organ (`name`, `account`, `password`) values (?, ?, ?) ";
   let param = [name, account, password]
+  console.log(ctx.request.body)
 
   try {
     await query(sql, param);
@@ -44,17 +45,16 @@ async function addOrgan (ctx) {
 
 async function getOrganList (ctx) {
   let sql = " SELECT id,name,`account`,password FROM organ "
-  const [row] = await query(sql);
-  console.log(row, '获取机构列表');
-  const organList = row;
-  if (organList) {
+  try {
+    const rest = await query(sql);
+    console.log(rest, '获取机构列表');
     ctx.body = {
-      data: organList,
+      data: rest,
       state: 1,
       code: 200,
       msg: "获取机构列表成功！",
-    };
-  } else {
+    }
+  } catch (error) {
     ctx.body = {
       state: 0,
       code: 400,
