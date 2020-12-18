@@ -9,18 +9,17 @@ const KoaBody = require("koa-body");
 
 // organ
 const organ = require("./controllers/organ/organ")
-
+const statistics = require('./controllers/statistics/statistics');
 
 // user
 const login = require("./controllers/user/login");
 const signin = require("./controllers/user/signin")
 
-
 // admin
 const adminLogin = require("./controllers/admin/login")
 const createPet = require("./controllers/admin/pet")
 const uploadImage = require("./controllers/admin/uploadImage")
-const catImage = require("./controllers/admin/catImage")
+const catImage = require("./controllers/admin/catImage");
 
 const app = new Koa();
 const router = new KoaRouter();
@@ -48,7 +47,8 @@ router.post('/addOrgan', organ);
 router.post('/getOrganList', organ);
 router.post('/setOrgan', organ);
 router.post('/delOrgan', organ);
-
+// statistics
+router.post('/getStatistics', statistics)
 
 // user
 router.post('/login', login);
